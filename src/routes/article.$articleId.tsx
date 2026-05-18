@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api/client'
+import { Reader } from '../components/Reader'
 
 export const Route = createFileRoute('/article/$articleId')({
-  component: Reader,
+  component: ArticlePage,
 })
 
-function Reader() {
+function ArticlePage() {
   const { articleId } = Route.useParams()
   const qc = useQueryClient()
 
@@ -54,14 +55,7 @@ function Reader() {
         )}
       </header>
 
-      <div className="rounded border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3 text-xs text-zinc-500">
-        Hover-glossing & adaptive rewrite are not wired up yet. The raw extracted body is
-        below so you can verify the import pipeline.
-      </div>
-
-      <div className="prose prose-zinc dark:prose-invert max-w-none whitespace-pre-wrap font-serif">
-        {a.content}
-      </div>
+      <Reader content={a.content} articleId={a.id} />
 
       <footer className="flex gap-3 border-t border-zinc-200 dark:border-zinc-800 pt-4">
         <Link to="/" className="text-sm hover:underline">
