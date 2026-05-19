@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { api } from '../api/client'
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/')({
 
 function ReadingList() {
   const qc = useQueryClient()
+  const navigate = useNavigate()
   const [url, setUrl] = useState('')
 
   const articles = useQuery({
@@ -28,9 +29,10 @@ function ReadingList() {
       if (error) throw new Error(typeof error === 'string' ? error : 'import failed')
       return data
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setUrl('')
       qc.invalidateQueries({ queryKey: ['articles'] })
+      if (data) navigate({ to: '/article/$articleId', params: { articleId: data.id } })
     },
   })
 
